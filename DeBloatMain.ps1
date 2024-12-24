@@ -100,13 +100,16 @@ $UninstallPackages = @(
     "SpotifyAB.SpotifyMusic"
 )
 
+# List out installed apps
 $InstalledPackages = Get-AppxPackage -AllUsers | Where {($UninstallPackages -contains $_.Name)}
 
+# List out prov. pkgs
 $ProvisionedPackages = Get-AppxProvisionedPackage -Online | Where {($UninstallPackages -contains $_.DisplayName)}
 
+# List out installed programs
 $InstalledPrograms = Get-Package | Where {$UninstallPrograms -contains $_.Name}
 
-# Remove provisioned packages first
+# For loop removes prov pkgs
 ForEach ($ProvPackage in $ProvisionedPackages) {
 
     Write-Host -Object "Attempting to remove provisioned package: [$($ProvPackage.DisplayName)]..."
@@ -118,7 +121,7 @@ ForEach ($ProvPackage in $ProvisionedPackages) {
     Catch {Write-Warning -Message "Failed to remove provisioned package: [$($ProvPackage.DisplayName)]"}
 }
 
-# Remove appx packages
+# For loop to remove all appx packages
 ForEach ($AppxPackage in $InstalledPackages) {
                                             
     Write-Host -Object "Attempting to remove Appx package: [$($AppxPackage.Name)]..."
@@ -130,7 +133,7 @@ ForEach ($AppxPackage in $InstalledPackages) {
     Catch {Write-Warning -Message "Failed to remove Appx package: [$($AppxPackage.Name)]"}
 }
 
-# Remove installed programs
+# For loop to remove installed programs
 $InstalledPrograms | ForEach {
 
     Write-Host -Object "Attempting to uninstall: [$($_.Name)]..."
@@ -142,4 +145,13 @@ $InstalledPrograms | ForEach {
     Catch {Write-Warning -Message "Failed to uninstall: [$($_.Name)]"}
 }
 
+
+
+
+#If statement to remove Dell stuff here?
+
+
+
+
+#Stop transcript log
 Stop-Transcript
